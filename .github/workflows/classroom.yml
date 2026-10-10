@@ -25,19 +25,20 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
         with:
-          version: 'v1.29.0'
+          version: "v1.29.0"
 
       - name: Setup Helm
         uses: azure/setup-helm@v4
         with:
-          version: 'v3.14.0'
+          version: "v3.14.0"
 
-      - name: Configure kubeconfig
+      - name: Start local Kubernetes cluster (k3s)
         run: |
+          curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable=traefik" sh -
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
-          sed -i 's/\r$//' ~/.kube/config
-          kubectl config set-context --current --namespace=rsoi
+          sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+          sudo chown -R runner:docker ~/.kube
+          kubectl wait --for=condition=Ready nodes --all --timeout=60s
 
       - name: Deploy Postgres
         run: |
