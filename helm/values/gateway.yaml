@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/vladlen-vozhzhaev/lab4-gateway
+  repository: ghcr.io/DRA6666/lab4-gateway
   tag: latest
   pullPolicy: Always
 
