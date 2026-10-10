@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/DRA6666/lab4-library
+  repository: ghcr.io/dra6666/lab4-library
   tag: latest
   pullPolicy: Always
 

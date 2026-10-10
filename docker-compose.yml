@@ -21,7 +21,7 @@ services:
 
   rating:
     build: ./rating
-    image: ghcr.io/DRA6666/lab4-rating:latest
+    image: ghcr.io/dra6666/lab4-rating:latest
     container_name: rating
     restart: on-failure
     depends_on:
@@ -36,7 +36,7 @@ services:
 
   library:
     build: ./library
-    image: ghcr.io/DRA6666/lab4-library:latest
+    image: ghcr.io/dra6666/lab4-library:latest
     container_name: library
     restart: on-failure
     depends_on:
@@ -51,7 +51,7 @@ services:
 
   reservation:
     build: ./reservation
-    image: ghcr.io/DRA6666/lab4-reservation:latest
+    image: ghcr.io/dra6666/lab4-reservation:latest
     container_name: reservation
     restart: on-failure
     depends_on:
@@ -66,7 +66,7 @@ services:
 
   gateway:
     build: ./gateway
-    image: ghcr.io/DRA6666/lab4-gateway:latest
+    image: ghcr.io/dra6666/lab4-gateway:latest
     container_name: gateway
     restart: on-failure
     depends_on:
