@@ -34,11 +34,26 @@ success() {
 
 step() {
   local step=$1
+  local replicas
   [[ $((step % 2)) -eq 0 ]] && replicas=1 || replicas=0
 
   printf "=== Step %d: scale %s to %s ===\n" "$step" "$deployment" "$replicas"
 
-  kubectl scale deployment "$deployment" -n "$namespace" --replicas "$replicas" 
+  kubectl scale deployment "$deployment" -n "$namespace" --replicas "$replicas"
+
+  # Ждём, пока deployment достигнет нужного состояния
+  kubectl rollout status deployment/"$deployment" -n "$namespace" --timeout=120s || true
+
+  if [[ $replicas -eq 0 ]]; then
+    # Ждём, пока под исчезнет полностью, и даём ingress закрыть keepalive
+    kubectl wait --for=delete pod -n "$namespace" \
+      -l app.kubernetes.io/name="$deployment" --timeout=60s || true
+    sleep 3
+  else
+    # Ждём, пока под вернётся и станет Ready
+    kubectl wait --for=condition=Ready pod -n "$namespace" \
+      -l app.kubernetes.io/name="$deployment" --timeout=180s || true
+  fi
 
   newman run \
     --delay-request=100 \
