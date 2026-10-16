@@ -64,9 +64,23 @@ jobs:
           kubectl wait -n rsoi -l app.kubernetes.io/name=gateway \
             pod --for=condition=Ready --timeout=5m
 
+      - name: Forward gateway for integration tests
+        run: |
+          kubectl port-forward --address 127.0.0.1 service/gateway 8080:80 -n rsoi > /tmp/gateway-port-forward.log 2>&1 &
+          echo $! > /tmp/gateway-port-forward.pid
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8080/actuator/health/readiness > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/gateway-port-forward.log
+          exit 1
+
       - name: Install Newman
         run: npm install -g newman
 
       - name: Autograding
         uses: education/autograding@v1
-        continue-on-error: true
+        env:
+          BASE_URL: http://127.0.0.1:8080

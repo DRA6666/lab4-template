@@ -8,7 +8,15 @@ spring:
 rating-url: ${RATING_URL:http://localhost:8050}
 library-url: ${LIBRARY_URL:http://localhost:8060}
 reservation-url: ${RESERVATION_URL:http://localhost:8070}
-management:replicaCount: 1
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
 
 image:
   repository: ghcr.io/vladlen-vozhzhaev/lab4-gateway

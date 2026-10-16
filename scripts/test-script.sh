@@ -5,6 +5,11 @@ set -e
 variant=${1:-${VARIANT}}
 deployment=${2:-${DEPLOYMENT_NAME}}
 namespace=${3:-${NAMESPACE}}
+newman_base_url=()
+
+if [[ -n ${BASE_URL:-} ]]; then
+  newman_base_url=(--env-var "baseUrl=$BASE_URL")
+fi
 
 [[ -z $namespace ]] && namespace="default"
 
@@ -26,6 +31,7 @@ timed() {
 success() {
   newman run \
     --delay-request=100 \
+    "${newman_base_url[@]}" \
     --folder=success \
     --export-environment "$variant"/postman/environment.json \
     --environment "$variant"/postman/environment.json \
@@ -57,6 +63,7 @@ step() {
 
   newman run \
     --delay-request=100 \
+    "${newman_base_url[@]}" \
     --folder=step"$step" \
     --export-environment "$variant"/postman/environment.json \
     --environment "$variant"/postman/environment.json \

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-export VARIANT="v4"
-export SCRIPT_PATH=/docker-entrypoint-initdb.d/
 export PGPASSWORD=postgres
-psql -f "$SCRIPT_PATH/scripts/db-$VARIANT.sql"
+for database in reservations libraries ratings; do
+  createdb --username postgres "$database" 2>/dev/null || true
+  psql --username postgres --dbname postgres \
+    --command="GRANT ALL PRIVILEGES ON DATABASE \"$database\" TO program"
+done
