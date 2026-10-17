@@ -16,3 +16,9 @@ primary:
         GRANT ALL PRIVILEGES ON DATABASE reservations TO program;
         GRANT ALL PRIVILEGES ON DATABASE libraries   TO program;
         GRANT ALL PRIVILEGES ON DATABASE ratings     TO program;
+        \connect reservations
+        GRANT ALL ON SCHEMA public TO program;
+        \connect libraries
+        GRANT ALL ON SCHEMA public TO program;
+        \connect ratings
+        GRANT ALL ON SCHEMA public TO program;

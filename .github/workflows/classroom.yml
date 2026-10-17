@@ -50,6 +50,10 @@ jobs:
         run: |
           POSTGRES_PASSWORD=$(kubectl get secret -n rsoi postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
           kubectl exec -n rsoi postgres-postgresql-0 -- env PGPASSWORD="$POSTGRES_PASSWORD" psql -U postgres -c "CREATE USER program WITH PASSWORD 'test';" || true
+          for database in reservations libraries ratings; do
+            kubectl exec -n rsoi postgres-postgresql-0 -- env PGPASSWORD="$POSTGRES_PASSWORD" \
+              psql -U postgres -d "$database" -c "GRANT ALL ON SCHEMA public TO program;"
+          done
 
       - name: Deploy services
         run: |
