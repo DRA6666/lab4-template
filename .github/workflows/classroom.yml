@@ -82,5 +82,3 @@ jobs:
 
       - name: Autograding
         uses: education/autograding@v1
-        env:
-          BASE_URL: http://127.0.0.1:8080

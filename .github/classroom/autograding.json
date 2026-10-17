@@ -3,7 +3,7 @@
     {
       "name": "Run Test Script",
       "setup": "",
-      "run": "./scripts/test-script.sh v4 rating rsoi",
+      "run": "BASE_URL=http://127.0.0.1:8080 ./scripts/test-script.sh v4 rating rsoi",
       "input": "",
       "output": "",
       "comparison": "included",
